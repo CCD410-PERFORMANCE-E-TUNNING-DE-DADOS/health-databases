@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: health-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: health_user
+      MONGO_INITDB_ROOT_PASSWORD: health_pass
+      MONGO_INITDB_DATABASE: health_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - health-net
+
+volumes:
+  mongo_data:
+
+networks:
+  health-net:
+    driver: bridge

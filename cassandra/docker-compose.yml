@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  cassandra:
+    image: cassandra:4.1
+    container_name: health-cassandra
+    restart: unless-stopped
+    environment:
+      CASSANDRA_CLUSTER_NAME: "HealthCluster"
+      CASSANDRA_DC: dc1
+      CASSANDRA_RACK: rack1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+      - ./init.cql:/docker-entrypoint-initdb.d/init.cql
+    networks:
+      - health-net
+
+volumes:
+  cassandra_data:
+
+networks:
+  health-net:
+    driver: bridge
