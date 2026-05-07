@@ -112,6 +112,7 @@ A escolha dos três bancos foi deliberadamente feita para cobrir os três vérti
 - `anamneses` — histórico clínico detalhado preenchido durante a triagem
 - `prescricoes` — prescrições médicas com medicamentos, dosagens e observações
 - `resultados_exames` — resultados de exames laboratoriais e de imagem (incluindo referências a arquivos)
+- `exames_solicitados` — .
 
 **Exemplo de documento `consultas`:**
 
