@@ -201,23 +201,6 @@ VALUES
 """)
 
 # ======================
-# Exames
-# ======================
-exames = ["Hemograma", "Raio-X", "Ressonância", "Tomografia", "Ultrassom"]
-
-for i in range(40):
-    sql.append(f"""
-INSERT INTO ccd410.exames_solicitados
-(nome, especialidade, descricao, resultado, consultaID)
-VALUES
-('{random.choice(exames)}',
- '{random.choice(especialidades)}',
- '{clean(fake.sentence())}',
- '{clean(fake.word())}',
- {random.choice(consultas)});
-""")
-
-# ======================
 # Salvar arquivo
 # ======================
 with open("populate_tables.sql", "w") as f:
