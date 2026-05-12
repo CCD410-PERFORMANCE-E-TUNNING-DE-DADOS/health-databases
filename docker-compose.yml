@@ -7,9 +7,6 @@ services:
     container_name: health-postgres
     restart: unless-stopped
 
-    env_file:
-      - ./postgresql/docker/.env
-
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -30,9 +27,6 @@ services:
     image: mongo:7
     container_name: health-mongodb
     restart: unless-stopped
-
-    env_file:
-      - ./mongodb/docker/.env
 
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
@@ -55,9 +49,6 @@ services:
     container_name: health-cassandra
     restart: unless-stopped
 
-    env_file:
-      - ./cassandra/docker/.env
-
     environment:
       CASSANDRA_CLUSTER_NAME: ${CASSANDRA_CLUSTER_NAME}
       CASSANDRA_DC: ${CASSANDRA_DC}
@@ -69,6 +60,37 @@ services:
 
     volumes:
       - cassandra_data:/var/lib/cassandra
+
+    networks:
+      - health-net
+
+
+  cassandra-init:
+    image: cassandra:4.1
+    container_name: health-cassandra-init
+    restart: "no"
+
+    depends_on:
+      - cassandra
+
+    volumes:
+      - ./cassandra/docker/init.cql:/init.cql
+
+    entrypoint: >
+      /bin/bash -c "
+      echo 'Esperando Cassandra iniciar...';
+
+      until cqlsh cassandra -e 'describe keyspaces'; do
+        echo 'Cassandra ainda não está pronto...';
+        sleep 5;
+      done;
+
+      echo 'Executando init.cql...';
+
+      cqlsh cassandra -f /init.cql;
+
+      echo 'Inicialização concluída';
+      "
 
     networks:
       - health-net
