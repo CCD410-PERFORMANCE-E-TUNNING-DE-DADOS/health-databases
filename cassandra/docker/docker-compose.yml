@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  cassandra:
+    image: cassandra:4.1
+    container_name: health-cassandra
+    restart: unless-stopped
+    env_file:
+      - .env
+
+    environment:
+      CASSANDRA_CLUSTER_NAME: ${CASSANDRA_CLUSTER_NAME}
+      CASSANDRA_DC: ${CASSANDRA_DC}
+      CASSANDRA_RACK: ${CASSANDRA_RACK}
+      CASSANDRA_ENDPOINT_SNITCH: ${CASSANDRA_ENDPOINT_SNITCH}
+
+    ports:
+      - "${CASSANDRA_PORT}:9042"
+
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    networks:
+      - health-net
+
+  cassandra-init:
+    image: cassandra:4.1
+    container_name: init-cassandra
+    depends_on:
+      - cassandra
+
+    volumes:
+      - ./init.cql:/init.cql
+
+    entrypoint: >
+      /bin/bash -c "
+      echo 'Esperando Cassandra iniciar...';
+
+      until cqlsh cassandra -e 'describe keyspaces'; do
+        echo 'Cassandra ainda não está pronto...';
+        sleep 5;
+      done;
+
+      echo 'Executando init.cql...';
+
+      cqlsh cassandra -f /init.cql;
+
+      echo 'Inicialização concluída';
+      "
+
+    networks:
+      - health-net
+volumes:
+  cassandra_data:
+
+networks:
+  health-net:
+    driver: bridge
