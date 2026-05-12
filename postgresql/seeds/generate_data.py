@@ -57,6 +57,7 @@ for i in range(1, NUM_PESSOAS + 1):
         "nome": clean(fake.name()),
         "data": fake.date_of_birth(minimum_age=18, maximum_age=90),
         "telefone": telefone_br(),
+        "email": clean(fake.email()),
         "cep": cep_br(),
         "cidade": clean(fake.city()),
         "uf": fake.estado_sigla(),
@@ -69,9 +70,9 @@ for i in range(1, NUM_PESSOAS + 1):
 
     sql.append(f"""
 INSERT INTO ccd410.pessoa
-(cpf, nome, dtNascimento, telefone, cep, cidade, uf, logradouro, numLogradouro, complemento)
+(cpf, nome, email, dtNascimento, telefone, cep, cidade, uf, logradouro, numLogradouro, complemento)
 VALUES
-('{pessoa["cpf"]}', '{pessoa["nome"]}', '{pessoa["data"]}', '{pessoa["telefone"]}',
+('{pessoa["cpf"]}', '{pessoa["nome"]}', '{pessoa["email"]}', '{pessoa["data"]}', '{pessoa["telefone"]}',
  '{pessoa["cep"]}', '{pessoa["cidade"]}', '{pessoa["uf"]}',
  '{pessoa["logradouro"]}', '{pessoa["numero"]}', '{pessoa["complemento"]}');
 """)

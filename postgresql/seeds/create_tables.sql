@@ -9,6 +9,7 @@ CREATE TABLE ccd410.pessoa (
   nome VARCHAR(128) NOT NULL,
   dtNascimento DATE NOT NULL,
   telefone CHAR(14) NOT NULL,
+  email VARCHAR(128), 
   cep CHAR(9) NOT NULL,
   cidade VARCHAR(128) NOT NULL,
   uf CHAR(2) NOT NULL,
