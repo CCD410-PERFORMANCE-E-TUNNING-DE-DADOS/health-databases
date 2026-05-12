@@ -23,3 +23,4 @@ A partir da pasta `postgres/`:
 
 ```bash
 docker compose up -d
+sudo docker exec -i health-postgres psql -U {user} -d {dbname} < postgresql/seeds/create_tables.sql 
