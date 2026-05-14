@@ -26,6 +26,7 @@ CREATE TABLE ccd410.funcionario (
   login VARCHAR(256) NOT NULL,
   senha VARCHAR(256) NOT NULL,
   statusFuncionario VARCHAR(128) NOT NULL,
+  cargo VARCHAR(32),
   dtContratacao DATE NOT NULL,
   pessoaID INT NOT NULL,
   FOREIGN KEY (pessoaID) REFERENCES ccd410.pessoa(pessoaID)

@@ -78,24 +78,6 @@ VALUES
 """)
 
 # ======================
-# Funcionarios
-# ======================
-funcionarios = []
-
-for i in range(1, NUM_FUNCIONARIOS + 1):
-    pessoa = pessoas[i - 1]
-
-    funcionarios.append(i)
-
-    sql.append(f"""
-INSERT INTO ccd410.funcionario
-(login, senha, statusFuncionario, dtContratacao, pessoaID)
-VALUES
-('user{i}', 'senha{122 + i}', 'ATIVO',
- '{fake.date_between(start_date="-10y")}', {pessoa["id"]});
-""")
-
-# ======================
 # Pacientes
 # ======================
 pacientes = []
@@ -113,45 +95,161 @@ VALUES
 """)
 
 # ======================
+# Funcionarios
+# ======================
+funcionarios = []
+
+for i in range(1, NUM_FUNCIONARIOS + 1):
+
+    pessoa = pessoas[i - 1]
+
+    funcionarios.append(i)
+
+    sql.append(f"""
+INSERT INTO ccd410.funcionario
+(
+    login,
+    senha,
+    statusFuncionario,
+    dtContratacao,
+    cargo,
+    pessoaID
+)
+
+VALUES
+(
+    'user{i}',
+    'senha{122 + i}',
+    'ATIVO',
+    '{fake.date_between(start_date="-10y")}',
+    NULL,
+    {pessoa["id"]}
+);
+""")
+
+# ======================
 # Profissões
 # ======================
-medicos = random.sample(funcionarios, k=10)
-restantes = [f for f in funcionarios if f not in medicos]
 
-enfermeiros = random.sample(restantes, k=8)
-recepcionistas = [f for f in restantes if f not in enfermeiros]
+medicos = random.sample(
+    funcionarios,
+    k=10
+)
 
-# Medicos
+restantes = [
+    f for f in funcionarios
+    if f not in medicos
+]
+
+enfermeiros = random.sample(
+    restantes,
+    k=8
+)
+
+recepcionistas = [
+    f for f in restantes
+    if f not in enfermeiros
+]
+
+# ======================
+# Médicos
+# ======================
+
 especialidades = [
-    "Cardiologia", "Pediatria", "Ortopedia", "Dermatologia",
-    "Neurologia", "Clínico Geral"
+    "Cardiologia",
+    "Pediatria",
+    "Ortopedia",
+    "Dermatologia",
+    "Neurologia",
+    "Clínico Geral"
 ]
 
 for f in medicos:
+
+    # atualiza cargo
+    sql.append(f"""
+UPDATE ccd410.funcionario
+
+SET cargo = 'MEDICO'
+
+WHERE funcionarioID = {f};
+""")
+
+    # tabela medico
     sql.append(f"""
 INSERT INTO ccd410.medico
-(funcionarioID, especialidade, crm)
+(
+    funcionarioID,
+    especialidade,
+    crm
+)
+
 VALUES
-({f}, '{random.choice(especialidades)}', '{crm()}');
+(
+    {f},
+    '{random.choice(especialidades)}',
+    '{crm()}'
+);
 """)
 
+# ======================
 # Enfermeiros
+# ======================
+
 for f in enfermeiros:
+
+    sql.append(f"""
+UPDATE ccd410.funcionario
+
+SET cargo = 'ENFERMEIRO'
+
+WHERE funcionarioID = {f};
+""")
+
     sql.append(f"""
 INSERT INTO ccd410.enfermeiro
-(funcionarioID, coren)
+(
+    funcionarioID,
+    coren
+)
+
 VALUES
-({f}, '{coren()}');
+(
+    {f},
+    '{coren()}'
+);
 """)
 
+# ======================
 # Recepcionistas
+# ======================
+
 for f in recepcionistas:
+
+    sql.append(f"""
+UPDATE ccd410.funcionario
+
+SET cargo = 'RECEPCIONISTA'
+
+WHERE funcionarioID = {f};
+""")
+
     sql.append(f"""
 INSERT INTO ccd410.recepcionista
-(funcionarioID, setor, ramal, telefoneProfissional)
+(
+    funcionarioID,
+    setor,
+    ramal,
+    telefoneProfissional
+)
+
 VALUES
-({f}, '{clean(fake.word())}', {random.randint(1000,9999)},
- '{telefone_br()}');
+(
+    {f},
+    '{clean(fake.word())}',
+    {random.randint(1000,9999)},
+    '{telefone_br()}'
+);
 """)
 
 # ======================
