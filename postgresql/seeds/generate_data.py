@@ -159,21 +159,50 @@ VALUES
 # ======================
 consultas = []
 
+status_consulta = [
+    "EM_ANDAMENTO",
+    "FINALIZADA",
+    "CANCELADA"
+]
+
 for i in range(1, NUM_CONSULTAS + 1):
+
     paciente = random.choice(pacientes)
+
     medico = random.choice(medicos)
 
     consultas.append(i)
 
+    data_consulta = fake.date_time_between(
+        start_date="-1y",
+        end_date="+30d"
+    )
+
+    status = random.choice(status_consulta)
+
+    retorno = rand_bool()
+
     sql.append(f"""
-INSERT INTO ccd410.consulta
-(dtConsulta, retorno, descricao, encaminhamento, pacienteID, funcionarioID)
-VALUES
-('{fake.date_between(start_date="-1y")}', {rand_bool()},
- '{clean(fake.sentence(nb_words=10))}',
- '{clean(fake.word())}',
- {paciente}, {medico});
-""")
+        INSERT INTO ccd410.consulta
+        (
+            mongoID,
+            dtConsulta,
+            retorno,
+            statusConsulta,
+            pacienteID,
+            funcionarioID
+        )
+
+        VALUES
+        (
+            NULL,
+            '{data_consulta}',
+            {retorno},
+            '{status}',
+            {paciente},
+            {medico}
+        );
+    """)
 
 # ======================
 # Alergias
