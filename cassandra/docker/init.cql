@@ -43,16 +43,17 @@ AND compaction = {
 
 
 CREATE TABLE IF NOT EXISTS auditoria_dados (
+    timestamp_evento TIMESTAMP,
+    data_evento DATE,    
     entidade TEXT,
     entidade_id UUID,
-    timestamp_evento TIMESTAMP,
     usuario_id UUID,
     campo_alterado TEXT,
     valor_antigo TEXT,
     valor_novo TEXT,
 
     PRIMARY KEY (
-        (entidade, entidade_id),
+        (data_evento),
         timestamp_evento
     )
 )

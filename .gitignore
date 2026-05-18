@@ -1,8 +1,8 @@
 .env
 populate_tables.sql
 
-postgresql/seeds/bin/
-postgresql/seeds/lib/
-postgresql/seeds/lib64
-postgresql/seeds/pyvenv.cfg
+bin/
+lib/
+lib64
+pyvenv.cfg
 

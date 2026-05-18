@@ -43,6 +43,25 @@ services:
     networks:
       - health-net
 
+  mongo-express:
+    image: mongo-express
+    container_name: health-mongo-express
+    restart: unless-stopped
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER} 
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH: false
+
+    depends_on:
+      - mongodb
+
+    networks:
+      - health-net
 
   cassandra:
     image: cassandra:4.1
