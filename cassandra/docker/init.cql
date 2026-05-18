@@ -8,7 +8,7 @@ USE health_casdb;
 
 
 CREATE TABLE IF NOT EXISTS logs_acesso (
-    funcionario_id UUID,
+    funcionario_id INT,
     data_evento DATE,
     timestamp_evento TIMESTAMP,
     acao TEXT,
@@ -46,35 +46,14 @@ CREATE TABLE IF NOT EXISTS auditoria_dados (
     timestamp_evento TIMESTAMP,
     data_evento DATE,    
     entidade TEXT,
-    entidade_id UUID,
-    usuario_id UUID,
+    funcionario_id INT,
     campo_alterado TEXT,
     valor_antigo TEXT,
     valor_novo TEXT,
 
     PRIMARY KEY (
-        (data_evento),
+        (funcionario_id,data_evento),
         timestamp_evento
     )
 )
 WITH CLUSTERING ORDER BY (timestamp_evento DESC);
-
-
-CREATE TABLE IF NOT EXISTS filas_atendimento (
-    setor TEXT,
-    data_evento DATE,
-    timestamp_evento TIMESTAMP,
-    paciente_id UUID,
-    status TEXT,
-    prioridade TEXT,
-
-    PRIMARY KEY (
-        (setor, data_evento),
-        timestamp_evento,
-        paciente_id
-    )
-)
-WITH CLUSTERING ORDER BY (
-    timestamp_evento DESC,
-    paciente_id ASC
-);
