@@ -11,9 +11,9 @@ fake = Faker("pt_BR")
 # CONFIG
 # =========================
 
-MONGO_USER = "health_user"
-MONGO_PASSWORD = "health_pass"
-MONGO_HOST = "mongodb"
+MONGO_USER = "adm"
+MONGO_PASSWORD = "guguinha14"
+MONGO_HOST = "crias-server"
 MONGO_PORT = 27017
 MONGO_DB = "health_db"
 
@@ -172,69 +172,6 @@ for _ in range(NUM_ANAMNESES):
 db.anamneses.insert_many(anamneses)
 
 print(f"{NUM_ANAMNESES} anamneses inseridas")
-
-# =========================
-# PRESCRICOES
-# =========================
-
-prescricoes = []
-
-for _ in range(NUM_PRESCRICOES):
-
-    prescricoes.append({
-
-        "consulta_id": str(uuid.uuid4()),
-
-        "paciente_id": str(uuid.uuid4()),
-
-        "medico_id": str(uuid.uuid4()),
-
-        "data_prescricao": random_date(),
-
-        "medicamentos": [
-            medicamento()
-            for _ in range(random.randint(1, 4))
-        ],
-
-        "observacoes": fake.sentence(nb_words=12)
-    })
-
-db.prescricoes.insert_many(prescricoes)
-
-print(f"{NUM_PRESCRICOES} prescricoes inseridas")
-
-# =========================
-# RESULTADOS EXAMES
-# =========================
-
-resultados = []
-
-for _ in range(NUM_RESULTADOS):
-
-    resultados.append({
-
-        "paciente_id": str(uuid.uuid4()),
-
-        "tipo_exame": random.choice([
-            "Hemograma",
-            "Raio-X",
-            "Tomografia",
-            "Ressonância",
-            "Ultrassom"
-        ]),
-
-        "data_exame": random_date(),
-
-        "resultado": fake.text(max_nb_chars=500),
-
-        "arquivo_url": fake.url(),
-
-        "medico_responsavel": fake.name()
-    })
-
-db.resultados_exames.insert_many(resultados)
-
-print(f"{NUM_RESULTADOS} resultados_exames inseridos")
 
 # =========================
 # FINAL
